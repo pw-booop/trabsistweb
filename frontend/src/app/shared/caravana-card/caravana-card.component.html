@@ -1,0 +1,38 @@
+<mat-card class="card" appearance="outlined">
+  <mat-card-header>
+    <mat-card-title>
+      <a class="titulo-link" [routerLink]="['/caravanas', caravana().id]">{{ caravana().nome }}</a>
+    </mat-card-title>
+    <app-status-badge [status]="caravana().status" />
+  </mat-card-header>
+
+  <mat-card-content>
+    <p class="jogo">
+      {{ caravana().jogo.mandante.nome }} x {{ caravana().jogo.visitante.nome }}
+    </p>
+    <p class="info">
+      <mat-icon>event</mat-icon>
+      {{ caravana().jogo.dataHora | date: "dd/MM 'às' HH:mm" }}
+    </p>
+    <p class="info">
+      <mat-icon>place</mat-icon>
+      {{ caravana().localSaida }} · {{ caravana().horarioSaida | date: 'HH:mm' }}
+    </p>
+
+    <div class="vagas">
+      <div class="vagas-texto">
+        <span>{{ vagas() }} vagas restantes</span>
+        <span>{{ caravana().inscricoesAtivas }}/{{ caravana().capacidadeTotal }}</span>
+      </div>
+      <mat-progress-bar mode="determinate" [value]="ocupacao()" />
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions>
+    <span class="preco">{{ caravana().valorPorPessoa | currency: 'BRL' }}</span>
+    <a mat-flat-button [disabled]="!podeInscrever()"
+       [routerLink]="['/caravanas', caravana().id, 'inscricao']">
+      Inscrever-se
+    </a>
+  </mat-card-actions>
+</mat-card>

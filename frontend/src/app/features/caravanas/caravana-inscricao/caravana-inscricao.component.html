@@ -1,0 +1,111 @@
+@if (caravana; as c) {
+  <h1>Inscrição</h1>
+
+  <mat-card appearance="outlined" class="resumo">
+    <div class="topo">
+      <h2>{{ c.nome }}</h2>
+      <app-status-badge [status]="c.status" />
+    </div>
+    <p class="jogo">{{ c.jogo.mandante.nome }} x {{ c.jogo.visitante.nome }}</p>
+    <p class="info"><mat-icon>event</mat-icon>{{ c.jogo.dataHora | date: "dd/MM 'às' HH:mm" }}</p>
+    <p class="info">
+      <mat-icon>place</mat-icon>
+      Saída: {{ c.localSaida }} · {{ c.horarioSaida | date: 'dd/MM HH:mm' }}
+    </p>
+    <p class="info"><mat-icon>event_seat</mat-icon>{{ vagas }} vagas restantes</p>
+    <p class="preco">{{ c.valorPorPessoa | currency: 'BRL' }} por pessoa</p>
+  </mat-card>
+
+  @if (bloqueio) {
+    <div class="aviso" role="alert">
+      <mat-icon>block</mat-icon>
+      <span>{{ bloqueio }}</span>
+    </div>
+    <a mat-stroked-button routerLink="/caravanas">Voltar às caravanas</a>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+      <mat-card appearance="outlined" class="secao">
+        <h2>Seus dados</h2>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nome completo</mat-label>
+          <input matInput formControlName="nome" autocomplete="name">
+          @if (form.controls.nome.hasError('required')) {
+            <mat-error>Informe o nome</mat-error>
+          } @else if (form.controls.nome.hasError('minlength')) {
+            <mat-error>Mínimo de 3 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>CPF</mat-label>
+          <input matInput formControlName="cpf" inputmode="numeric"
+                 placeholder="000.000.000-00" (input)="mascaraCpf($event)">
+          @if (form.controls.cpf.hasError('required')) {
+            <mat-error>Informe o CPF</mat-error>
+          } @else if (form.controls.cpf.hasError('cpf')) {
+            <mat-error>CPF inválido</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="linha">
+          <mat-form-field appearance="outline">
+            <mat-label>Telefone</mat-label>
+            <input matInput type="tel" formControlName="telefone"
+                   placeholder="(71) 99999-9999" autocomplete="tel">
+            @if (form.controls.telefone.hasError('required')) {
+              <mat-error>Informe o telefone</mat-error>
+            } @else if (form.controls.telefone.hasError('pattern')) {
+              <mat-error>Telefone inválido</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>E-mail (opcional)</mat-label>
+            <input matInput type="email" formControlName="email" inputmode="email">
+            <mat-error>E-mail inválido</mat-error>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Ônibus</mat-label>
+          <mat-select formControlName="onibusId">
+            <mat-option [value]="null">Sem preferência</mat-option>
+            @for (o of onibus; track o.id) {
+              <mat-option [value]="o.id" [disabled]="o.vagas === 0">
+                {{ o.empresa }} · {{ o.placa }} ·
+                {{ o.vagas === 0 ? 'lotado' : o.vagas + ' vagas' }}
+              </mat-option>
+            }
+          </mat-select>
+          <mat-hint>O organizador define o assento depois</mat-hint>
+        </mat-form-field>
+      </mat-card>
+
+      <p class="nota">
+        <mat-icon>info</mat-icon>
+        A inscrição fica como <strong>pendente</strong> até o organizador confirmar o pagamento.
+      </p>
+
+      @if (erro()) {
+        <div class="aviso" role="alert">
+          <mat-icon>error</mat-icon>
+          <span>{{ erro() }}</span>
+        </div>
+      }
+
+      <div class="rodape">
+        <a mat-button routerLink="/caravanas">Cancelar</a>
+        <button mat-flat-button type="submit" [disabled]="enviando()">
+          @if (enviando()) { <mat-spinner diameter="20" /> } @else { Confirmar inscrição }
+        </button>
+      </div>
+    </form>
+  }
+} @else {
+  <div class="aviso" role="alert">
+    <mat-icon>search_off</mat-icon>
+    <span>Caravana não encontrada.</span>
+  </div>
+  <a mat-stroked-button routerLink="/caravanas">Voltar às caravanas</a>
+}

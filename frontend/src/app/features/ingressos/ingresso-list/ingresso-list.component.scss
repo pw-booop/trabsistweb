@@ -1,0 +1,58 @@
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.seletor { width: 100%; max-width: 420px; }
+
+.resumo {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(2, 1fr);
+  margin-bottom: var(--space-4);
+}
+@media (min-width: 768px) {
+  .resumo { grid-template-columns: repeat(4, 1fr); }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-left: 4px solid var(--mat-sys-outline-variant);
+  border-radius: var(--radius-md);
+
+  span { font-size: 13px; color: var(--mat-sys-on-surface-variant); }
+  strong { font-size: 28px; line-height: 1.2; }
+}
+.disponivel { border-left-color: var(--ingresso-disponivel); }
+.reservado { border-left-color: var(--ingresso-reservado); }
+.vendido { border-left-color: var(--ingresso-vendido); }
+
+.cabecalho-tabela {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  h2 { margin: 0; }
+}
+
+.tabela {
+  overflow-x: auto;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--radius-md);
+}
+table { width: 100%; min-width: 680px; }
+code { font-size: 13px; }
+
+.vazio {
+  text-align: center;
+  padding: var(--space-4);
+  color: var(--mat-sys-on-surface-variant);
+}

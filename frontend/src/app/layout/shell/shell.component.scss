@@ -1,0 +1,17 @@
+.shell { height: 100vh; }
+mat-sidenav { width: 240px; }
+
+mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.espaco { flex: 1; }
+.usuario { font-size: 13px; margin-right: var(--space-2); }
+// Garante contraste do botão sobre a barra verde
+.acao { color: var(--mat-sys-on-primary) !important; }
+
+.ativo { background: var(--mat-sys-secondary-container); }

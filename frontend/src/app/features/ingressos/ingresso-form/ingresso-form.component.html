@@ -1,0 +1,108 @@
+@if (naoEncontrado) {
+  <div class="aviso" role="alert">
+    <mat-icon>search_off</mat-icon><span>Ingresso não encontrado.</span>
+  </div>
+  <a mat-stroked-button routerLink="/ingressos">Voltar aos ingressos</a>
+} @else if (editando && !editavel) {
+  <div class="aviso" role="alert">
+    <mat-icon>block</mat-icon>
+    <span>Ingresso vendido ou cancelado não pode ser editado.</span>
+  </div>
+  <a mat-stroked-button routerLink="/ingressos">Voltar aos ingressos</a>
+} @else {
+  <h1>{{ editando ? 'Editar ingresso' : 'Novo lote de ingressos' }}</h1>
+
+  <form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+    <mat-card appearance="outlined" class="secao">
+      @if (ingressoEdicao; as i) {
+        <p class="resumo">
+          <strong>{{ i.codigo }}</strong><br>
+          {{ jogoEdicao?.mandante?.nome }} x {{ jogoEdicao?.visitante?.nome }}
+        </p>
+      } @else {
+        <mat-form-field appearance="outline">
+          <mat-label>Jogo</mat-label>
+          <mat-select formControlName="jogoId">
+            @for (j of jogos; track j.id) {
+              <mat-option [value]="j.id">
+                {{ j.mandante.nome }} x {{ j.visitante.nome }} · {{ j.dataHora | date: 'dd/MM' }}
+              </mat-option>
+            }
+          </mat-select>
+          <mat-error>Selecione o jogo</mat-error>
+        </mat-form-field>
+      }
+
+      <mat-form-field appearance="outline">
+        <mat-label>Setor</mat-label>
+        <mat-select formControlName="setor">
+          @for (s of setores; track s) {
+            <mat-option [value]="s">{{ s }}</mat-option>
+          }
+        </mat-select>
+        <mat-error>Selecione o setor</mat-error>
+      </mat-form-field>
+
+      <div class="linha">
+        <mat-form-field appearance="outline">
+          <mat-label>Valor</mat-label>
+          <span matTextPrefix>R$&nbsp;</span>
+          <input matInput type="number" inputmode="decimal" step="0.01" formControlName="valor">
+          @if (form.controls.valor.hasError('required')) {
+            <mat-error>Informe o valor</mat-error>
+          } @else if (form.controls.valor.hasError('min')) {
+            <mat-error>O valor deve ser maior que zero</mat-error>
+          }
+        </mat-form-field>
+
+        @if (!editando) {
+          <mat-form-field appearance="outline">
+            <mat-label>Quantidade</mat-label>
+            <input matInput type="number" inputmode="numeric" formControlName="quantidade">
+            @if (form.controls.quantidade.hasError('required')) {
+              <mat-error>Informe a quantidade</mat-error>
+            } @else if (form.controls.quantidade.hasError('min')
+                        || form.controls.quantidade.hasError('pattern')) {
+              <mat-error>Use um número inteiro maior que zero</mat-error>
+            }
+          </mat-form-field>
+        }
+      </div>
+    </mat-card>
+
+    @if (!editando && info(); as inf) {
+      <mat-card appearance="outlined" class="capacidade">
+        <div class="linha-cap">
+          <span>{{ inf.estadio.nome }}</span>
+          <span>Capacidade: <strong>{{ inf.estadio.capacidade }}</strong></span>
+        </div>
+        <mat-progress-bar mode="determinate" [value]="inf.previsao"
+                          [class.estourou]="form.hasError('capacidade')" />
+        <div class="linha-cap pequeno">
+          <span>{{ inf.ocupados }} já criados</span>
+          <span>{{ inf.restante }} lugares restantes</span>
+        </div>
+      </mat-card>
+    }
+
+    @if (form.hasError('capacidade') && form.controls.quantidade.touched) {
+      <p class="erro-campo" role="alert">
+        Excede a capacidade do estádio: restam {{ form.getError('capacidade').restante }} lugares.
+      </p>
+    }
+
+    @if (!editando) {
+      <p class="nota">
+        <mat-icon>info</mat-icon>
+        Total do lote: <strong>{{ total() | currency: 'BRL' }}</strong>
+      </p>
+    }
+
+    <div class="rodape">
+      <a mat-button routerLink="/ingressos">Cancelar</a>
+      <button mat-flat-button type="submit">
+        {{ editando ? 'Salvar alterações' : 'Criar ingressos' }}
+      </button>
+    </div>
+  </form>
+}

@@ -1,0 +1,43 @@
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.filtros {
+  display: grid;
+  gap: 0 var(--space-3);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .filtros { grid-template-columns: repeat(3, 1fr); }
+}
+
+.acoes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.contagem {
+  color: var(--mat-sys-on-surface-variant);
+  font-size: 14px;
+  margin: 0 0 var(--space-3);
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.vazio {
+  text-align: center;
+  padding: var(--space-5) var(--space-3);
+  color: var(--mat-sys-on-surface-variant);
+  mat-icon { font-size: 48px; width: 48px; height: 48px; }
+}

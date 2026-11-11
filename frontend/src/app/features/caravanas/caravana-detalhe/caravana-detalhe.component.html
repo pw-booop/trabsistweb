@@ -1,0 +1,108 @@
+@if (caravana; as c) {
+  <a mat-button routerLink="/caravanas" class="voltar">
+    <mat-icon>arrow_back</mat-icon> Caravanas
+  </a>
+
+  <mat-card appearance="outlined" class="topo">
+    <div class="titulo">
+      <h1>{{ c.nome }}</h1>
+      <app-status-badge [status]="status()" />
+    </div>
+
+    <p class="jogo">{{ c.jogo.mandante.nome }} x {{ c.jogo.visitante.nome }}</p>
+    <p class="info"><mat-icon>emoji_events</mat-icon>{{ c.jogo.campeonato }}</p>
+    <p class="info">
+      <mat-icon>event</mat-icon>{{ c.jogo.dataHora | date: "dd/MM/yyyy 'às' HH:mm" }}
+    </p>
+    <p class="info">
+      <mat-icon>place</mat-icon>
+      Saída: {{ c.localSaida }} · {{ c.horarioSaida | date: "dd/MM 'às' HH:mm" }}
+    </p>
+
+    <div class="rodape-topo">
+      <span class="preco">{{ c.valorPorPessoa | currency: 'BRL' }} <small>por pessoa</small></span>
+      <a mat-flat-button [routerLink]="['/caravanas', c.id, 'inscricao']"
+         [disabled]="!podeInscrever()">
+        Inscrever-se
+      </a>
+    </div>
+  </mat-card>
+
+  <section>
+    <div class="cabecalho">
+      <h2>Ônibus</h2>
+      <span class="resumo">{{ ativas().length }}/{{ capacidade }} · {{ vagas() }} vagas</span>
+    </div>
+
+    <div class="onibus-grid">
+      @for (o of onibusComOcupacao(); track o.id) {
+        <mat-card appearance="outlined" class="onibus">
+          <div class="onibus-topo">
+            <mat-icon>directions_bus</mat-icon>
+            <div>
+              <strong>{{ o.empresa }}</strong>
+              <span class="placa">{{ o.placa }}</span>
+            </div>
+          </div>
+          <mat-progress-bar mode="determinate" [value]="o.pct" />
+          <div class="onibus-rodape">
+            <span>{{ o.ocupadas }}/{{ o.capacidade }} lugares</span>
+            <span>{{ o.vagas === 0 ? 'Lotado' : o.vagas + ' livres' }}</span>
+          </div>
+        </mat-card>
+      }
+    </div>
+
+    @if (semOnibus() > 0) {
+      <p class="nota">
+        <mat-icon>info</mat-icon>
+        {{ semOnibus() }} inscrito(s) ainda sem ônibus definido.
+      </p>
+    }
+  </section>
+
+  @if (podeVerInscritos()) {
+    <section>
+      <div class="cabecalho">
+        <h2>Inscritos</h2>
+        <a mat-button routerLink="/painel">Gerenciar pagamentos</a>
+      </div>
+
+      <div class="tabela">
+        <table mat-table [dataSource]="inscricoes()">
+          <ng-container matColumnDef="passageiro">
+            <th mat-header-cell *matHeaderCellDef>Passageiro</th>
+            <td mat-cell *matCellDef="let i">{{ i.passageiroNome }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="onibus">
+            <th mat-header-cell *matHeaderCellDef>Ônibus</th>
+            <td mat-cell *matCellDef="let i">{{ nomeOnibus(i) }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="assento">
+            <th mat-header-cell *matHeaderCellDef>Assento</th>
+            <td mat-cell *matCellDef="let i">{{ i.assento ?? '—' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="pagamento">
+            <th mat-header-cell *matHeaderCellDef>Pagamento</th>
+            <td mat-cell *matCellDef="let i"><app-status-badge [status]="i.statusPagamento" /></td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+          <tr mat-row *matRowDef="let row; columns: colunas"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td class="vazio" [attr.colspan]="colunas.length">Nenhuma inscrição ainda.</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+  }
+} @else {
+  <div class="aviso" role="alert">
+    <mat-icon>search_off</mat-icon><span>Caravana não encontrada.</span>
+  </div>
+  <a mat-stroked-button routerLink="/caravanas">Voltar às caravanas</a>
+}
