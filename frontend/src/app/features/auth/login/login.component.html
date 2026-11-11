@@ -1,0 +1,53 @@
+<main class="login">
+  <mat-card class="card" appearance="outlined">
+    <div class="marca">
+      <mat-icon>directions_bus</mat-icon>
+      <h1>Caravanas</h1>
+      <p>Entre para ver e gerenciar suas caravanas</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="entrar()" novalidate>
+      <mat-form-field appearance="outline">
+        <mat-label>E-mail</mat-label>
+        <input matInput type="email" formControlName="email"
+               autocomplete="email" inputmode="email">
+        @if (form.controls.email.hasError('required')) {
+          <mat-error>Informe o e-mail</mat-error>
+        } @else if (form.controls.email.hasError('email')) {
+          <mat-error>E-mail inválido</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Senha</mat-label>
+        <input matInput formControlName="senha" autocomplete="current-password"
+               [type]="mostrarSenha() ? 'text' : 'password'">
+        <button mat-icon-button matSuffix type="button"
+                (click)="mostrarSenha.set(!mostrarSenha())"
+                [attr.aria-label]="mostrarSenha() ? 'Ocultar senha' : 'Mostrar senha'">
+          <mat-icon>{{ mostrarSenha() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (form.controls.senha.hasError('required')) {
+          <mat-error>Informe a senha</mat-error>
+        } @else if (form.controls.senha.hasError('minlength')) {
+          <mat-error>Mínimo de 6 caracteres</mat-error>
+        }
+      </mat-form-field>
+
+      @if (erro()) {
+        <div class="erro" role="alert">
+          <mat-icon>error</mat-icon>
+          <span>{{ erro() }}</span>
+        </div>
+      }
+
+      <button mat-flat-button class="entrar" type="submit" [disabled]="carregando()">
+        @if (carregando()) {
+          <mat-spinner diameter="20" />
+        } @else {
+          Entrar
+        }
+      </button>
+    </form>
+  </mat-card>
+</main>

@@ -1,0 +1,124 @@
+<h1>Nova caravana</h1>
+
+<form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+  <mat-card appearance="outlined" class="secao">
+    <h2>Dados da caravana</h2>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Jogo</mat-label>
+      <mat-select formControlName="jogoId">
+        @for (j of jogos; track j.id) {
+          <mat-option [value]="j.id">
+            {{ j.mandante.nome }} x {{ j.visitante.nome }} · {{ j.dataHora | date: 'dd/MM HH:mm' }}
+          </mat-option>
+        }
+      </mat-select>
+      <mat-hint>Só aparecem jogos agendados e futuros</mat-hint>
+      <mat-error>Selecione o jogo</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Nome da caravana</mat-label>
+      <input matInput formControlName="nome">
+      @if (form.controls.nome.hasError('required')) {
+        <mat-error>Informe o nome</mat-error>
+      } @else if (form.controls.nome.hasError('minlength')) {
+        <mat-error>Mínimo de 3 caracteres</mat-error>
+      }
+    </mat-form-field>
+
+    <div class="linha">
+      <mat-form-field appearance="outline">
+        <mat-label>Local de saída</mat-label>
+        <input matInput formControlName="localSaida">
+        <mat-error>Informe o local de saída</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Saída (data e hora)</mat-label>
+        <input matInput type="datetime-local" formControlName="horarioSaida">
+        <mat-error>Informe a data e hora</mat-error>
+      </mat-form-field>
+    </div>
+
+    @if (form.hasError('saidaDepoisDoJogo') && form.controls.horarioSaida.touched) {
+      <p class="erro-campo" role="alert">
+        A saída precisa ser antes do jogo
+        @if (jogoSelecionado(); as j) { ({{ j.dataHora | date: 'dd/MM HH:mm' }}) }.
+      </p>
+    }
+
+    <mat-form-field appearance="outline">
+      <mat-label>Valor por pessoa</mat-label>
+      <span matTextPrefix>R$&nbsp;</span>
+      <input matInput type="number" inputmode="decimal" step="0.01" formControlName="valorPorPessoa">
+      @if (form.controls.valorPorPessoa.hasError('required')) {
+        <mat-error>Informe o valor</mat-error>
+      } @else if (form.controls.valorPorPessoa.hasError('min')) {
+        <mat-error>O valor deve ser maior que zero</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descrição (opcional)</mat-label>
+      <textarea matInput rows="3" formControlName="descricao"></textarea>
+    </mat-form-field>
+  </mat-card>
+
+  <mat-card appearance="outlined" class="secao">
+    <div class="topo-secao">
+      <h2>Ônibus</h2>
+      <button mat-stroked-button type="button" (click)="adicionarOnibus()">
+        <mat-icon>add</mat-icon> Adicionar
+      </button>
+    </div>
+
+    <div formArrayName="onibus">
+      @for (o of onibus.controls; track o; let i = $index) {
+        <div class="onibus" [formGroupName]="i">
+          <span class="num">Ônibus {{ i + 1 }}</span>
+
+          <div class="campos">
+            <mat-form-field appearance="outline">
+              <mat-label>Placa</mat-label>
+              <input matInput formControlName="placa" placeholder="ABC1D23" maxlength="8">
+              @if (o.controls.placa.hasError('required')) {
+                <mat-error>Informe a placa</mat-error>
+              } @else if (o.controls.placa.hasError('pattern')) {
+                <mat-error>Placa inválida</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Empresa</mat-label>
+              <input matInput formControlName="empresa">
+              <mat-error>Informe a empresa</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Capacidade</mat-label>
+              <input matInput type="number" inputmode="numeric" formControlName="capacidade">
+              <mat-error>Entre 1 e 80 lugares</mat-error>
+            </mat-form-field>
+          </div>
+
+          <button mat-icon-button type="button" class="remover"
+                  [disabled]="onibus.length === 1"
+                  (click)="removerOnibus(i)" aria-label="Remover ônibus">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="totais">
+      <span><strong>{{ capacidadeTotal() }}</strong> vagas no total</span>
+      <span>Arrecadação máxima: <strong>{{ previsto() | currency: 'BRL' }}</strong></span>
+    </div>
+  </mat-card>
+
+  <div class="rodape">
+    <a mat-button routerLink="/caravanas">Cancelar</a>
+    <button mat-flat-button type="submit">Salvar caravana</button>
+  </div>
+</form>

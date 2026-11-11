@@ -1,0 +1,67 @@
+.linha-topo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-1);
+}
+.seletor { flex: 1 1 280px; max-width: 420px; }
+
+.resumo {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(2, 1fr);
+  margin-bottom: var(--space-4);
+}
+
+@media (min-width: 900px) {
+  .resumo { grid-template-columns: 2fr 1fr 1fr 2fr; }
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border-left: 4px solid var(--mat-sys-outline-variant);
+
+  strong { font-size: 28px; line-height: 1.2; }
+  small { font-size: 16px; font-weight: 400; color: var(--mat-sys-on-surface-variant); }
+}
+
+.rotulo { font-size: 13px; color: var(--mat-sys-on-surface-variant); }
+.detalhe { font-size: 12px; color: var(--mat-sys-on-surface-variant); }
+
+.ocupacao { border-left-color: var(--status-aberta); grid-column: span 2; }
+.pago { border-left-color: var(--pagamento-pago); }
+.pendente { border-left-color: var(--pagamento-pendente); }
+.dinheiro { border-left-color: var(--pagamento-reembolsado); grid-column: span 2; }
+
+@media (min-width: 900px) {
+  .ocupacao, .dinheiro { grid-column: auto; }
+}
+
+.cabecalho-tabela {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+
+  h2 { margin: 0; }
+}
+
+.tabela {
+  overflow-x: auto;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--radius-md);
+}
+
+table { width: 100%; min-width: 820px; }
+
+.vazio {
+  text-align: center;
+  padding: var(--space-4);
+  color: var(--mat-sys-on-surface-variant);
+}

@@ -1,0 +1,111 @@
+@use '@angular/material' as mat;
+
+// ---------- Tema Material (M3) ----------
+html {
+  color-scheme: light;
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$green-palette,
+      tertiary: mat.$orange-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+// ---------- Design tokens ----------
+:root {
+  // Espaçamento (escala de 4px)
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+
+  // Raio e sombra
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 8%);
+
+  // Status de Caravana
+  --status-aberta: #2e7d32;
+  --status-lotada: #ef6c00;
+  --status-encerrada: #616161;
+  --status-cancelada: #c62828;
+
+  // Status de Pagamento
+  --pagamento-pendente: #f9a825;
+  --pagamento-pago: #2e7d32;
+  --pagamento-cancelado: #c62828;
+  --pagamento-reembolsado: #1565c0;
+
+  // Status de Ingresso e de Jogo
+  --ingresso-disponivel: #1565c0;
+  --ingresso-reservado: #f9a825;
+  --ingresso-vendido: #2e7d32;
+}
+
+// ---------- Base ----------
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+// Container padrão das páginas (mobile first)
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-3);
+}
+
+@media (min-width: 768px) {
+  .page { padding: var(--space-4); }
+}
+
+// ---------- Cadastros (Passo 16) ----------
+.cad-barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.cad-tabela {
+  overflow-x: auto;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--radius-md);
+  table { width: 100%; min-width: 600px; }
+}
+
+.cad-vazio {
+  text-align: center;
+  padding: var(--space-4);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.cad-card {
+  max-width: 640px;
+  padding: var(--space-3);
+  h2 { margin: 0 0 var(--space-3); font-size: 18px; }
+}
+
+.cad-form { display: flex; flex-direction: column; }
+
+.cad-linha {
+  display: grid;
+  gap: 0 var(--space-3);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .cad-linha { grid-template-columns: 1fr 1fr; }
+}
+
+.cad-rodape { display: flex; justify-content: flex-end; gap: var(--space-2); }
+.cad-erro { margin: 0 0 var(--space-3); font-size: 13px; color: var(--status-cancelada); }

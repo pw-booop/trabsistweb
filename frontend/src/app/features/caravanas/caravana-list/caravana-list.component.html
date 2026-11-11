@@ -1,0 +1,52 @@
+<div class="topo">
+  <h1>Caravanas</h1>
+  <a mat-flat-button routerLink="/caravanas/nova">
+    <mat-icon>add</mat-icon> Nova caravana
+  </a>
+</div>
+
+<form class="filtros" [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <mat-label>Jogo ou time</mat-label>
+    <input matInput formControlName="jogo" placeholder="Ex.: Bahia">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Data do jogo</mat-label>
+    <input matInput [matDatepicker]="picker" formControlName="data">
+    <mat-datepicker-toggle matIconSuffix [for]="picker" />
+    <mat-datepicker #picker />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Cidade de saída</mat-label>
+    <mat-select formControlName="cidade">
+      <mat-option value="">Todas</mat-option>
+      @for (c of cidades; track c) {
+        <mat-option [value]="c">{{ c }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="acoes">
+    <mat-slide-toggle formControlName="comVagas">Só com vagas</mat-slide-toggle>
+    <button mat-button type="button" (click)="limpar()">Limpar</button>
+  </div>
+</form>
+
+<p class="contagem">{{ filtradas().length }} caravana(s) encontrada(s)</p>
+
+@if (filtradas().length) {
+  <div class="grid">
+    @for (c of filtradas(); track c.id) {
+      <app-caravana-card [caravana]="c" />
+    }
+  </div>
+} @else {
+  <div class="vazio">
+    <mat-icon>search_off</mat-icon>
+    <p>Nenhuma caravana com esses filtros.</p>
+    <button mat-stroked-button type="button" (click)="limpar()">Limpar filtros</button>
+  </div>
+}

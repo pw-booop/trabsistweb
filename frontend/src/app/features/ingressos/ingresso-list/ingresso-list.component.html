@@ -1,0 +1,88 @@
+<div class="topo">
+  <h1>Ingressos</h1>
+  <a mat-flat-button routerLink="/ingressos/novo">
+    <mat-icon>add</mat-icon> Novo ingresso
+  </a>
+</div>
+
+<mat-form-field appearance="outline" class="seletor">
+  <mat-label>Jogo</mat-label>
+  <mat-select [value]="jogoId()" (selectionChange)="jogoId.set($event.value)">
+    @for (j of jogos; track j.id) {
+      <mat-option [value]="j.id">
+        {{ j.mandante.nome }} x {{ j.visitante.nome }} · {{ j.dataHora | date: 'dd/MM' }}
+      </mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+
+<section class="resumo">
+  <div class="stat total"><span>Total</span><strong>{{ contagem().total }}</strong></div>
+  <div class="stat disponivel"><span>Disponíveis</span><strong>{{ contagem().disponiveis }}</strong></div>
+  <div class="stat reservado"><span>Reservados</span><strong>{{ contagem().reservados }}</strong></div>
+  <div class="stat vendido"><span>Vendidos</span><strong>{{ contagem().vendidos }}</strong></div>
+</section>
+
+<div class="cabecalho-tabela">
+  <h2>Lista</h2>
+  <mat-button-toggle-group [value]="filtro()" (change)="filtro.set($event.value)"
+                           aria-label="Filtrar por status">
+    <mat-button-toggle value="TODOS">Todos</mat-button-toggle>
+    <mat-button-toggle value="DISPONIVEL">Disponíveis</mat-button-toggle>
+    <mat-button-toggle value="RESERVADO">Reservados</mat-button-toggle>
+    <mat-button-toggle value="VENDIDO">Vendidos</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+
+<div class="tabela">
+  <table mat-table [dataSource]="linhas()">
+    <ng-container matColumnDef="codigo">
+      <th mat-header-cell *matHeaderCellDef>Código</th>
+      <td mat-cell *matCellDef="let i"><code>{{ i.codigo }}</code></td>
+    </ng-container>
+
+    <ng-container matColumnDef="setor">
+      <th mat-header-cell *matHeaderCellDef>Setor</th>
+      <td mat-cell *matCellDef="let i">{{ i.setor }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="valor">
+      <th mat-header-cell *matHeaderCellDef>Valor</th>
+      <td mat-cell *matCellDef="let i">{{ i.valor | currency: 'BRL' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let i"><app-status-badge [status]="i.status" /></td>
+    </ng-container>
+
+    <ng-container matColumnDef="passageiro">
+      <th mat-header-cell *matHeaderCellDef>Passageiro</th>
+      <td mat-cell *matCellDef="let i">{{ i.passageiroNome ?? '—' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="acoes">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let i">
+        @if (podeVincular(i)) {
+          <button mat-stroked-button (click)="vincular(i)">
+            <mat-icon>link</mat-icon> Vincular
+          </button>
+        }
+        @if (podeEditar(i)) {
+          <a mat-icon-button [routerLink]="['/ingressos', i.id, 'editar']"
+             aria-label="Editar ingresso">
+            <mat-icon>edit</mat-icon>
+          </a>
+        }
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="colunas"></tr>
+    <tr mat-row *matRowDef="let row; columns: colunas"></tr>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="vazio" [attr.colspan]="colunas.length">Nenhum ingresso neste filtro.</td>
+    </tr>
+  </table>
+</div>

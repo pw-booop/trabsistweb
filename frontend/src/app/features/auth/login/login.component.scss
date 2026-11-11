@@ -1,0 +1,49 @@
+.login {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  background: var(--mat-sys-surface-container);
+}
+
+.card {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--space-4);
+}
+
+.marca {
+  text-align: center;
+  margin-bottom: var(--space-4);
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: var(--mat-sys-primary);
+  }
+  h1 { margin: var(--space-2) 0 var(--space-1); }
+  p { margin: 0; color: var(--mat-sys-on-surface-variant); font-size: 14px; }
+}
+
+form { display: flex; flex-direction: column; }
+
+.erro {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--status-cancelada);
+  background: color-mix(in srgb, var(--status-cancelada) 10%, white);
+}
+
+.entrar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

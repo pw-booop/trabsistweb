@@ -1,0 +1,33 @@
+<mat-sidenav-container class="shell">
+  <mat-sidenav #nav [mode]="isMobile() ? 'over' : 'side'" [opened]="!isMobile()">
+    <mat-nav-list>
+      @for (item of menu; track item.path) {
+        <a mat-list-item [routerLink]="item.path" routerLinkActive="ativo"
+           (click)="isMobile() && nav.close()">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar>
+      @if (isMobile()) {
+        <button mat-icon-button (click)="nav.toggle()" aria-label="Menu">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+      <span>Caravanas</span>
+      <span class="espaco"></span>
+
+      @if (auth.usuario(); as u) {
+        <span class="usuario">{{ u.nome }} · {{ u.perfil }}</span>
+        <button mat-button class="acao" (click)="sair()">Sair</button>
+      } @else {
+        <a mat-button class="acao" routerLink="/login">Entrar</a>
+      }
+    </mat-toolbar>
+    <main class="page"><router-outlet /></main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

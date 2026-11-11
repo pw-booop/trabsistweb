@@ -1,0 +1,61 @@
+@if (naoEncontrado) {
+  <div class="aviso" role="alert">
+    <mat-icon>search_off</mat-icon><span>Passageiro não encontrado.</span>
+  </div>
+  <a mat-stroked-button routerLink="/passageiros">Voltar aos passageiros</a>
+} @else {
+  <h1>{{ editando ? 'Editar passageiro' : 'Novo passageiro' }}</h1>
+
+  <form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+    <mat-card appearance="outlined" class="secao">
+      <mat-form-field appearance="outline">
+        <mat-label>Nome completo</mat-label>
+        <input matInput formControlName="nome" autocomplete="off">
+        @if (form.controls.nome.hasError('required')) {
+          <mat-error>Informe o nome</mat-error>
+        } @else if (form.controls.nome.hasError('minlength')) {
+          <mat-error>Mínimo de 3 caracteres</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" inputmode="numeric"
+               placeholder="000.000.000-00" (input)="mascaraCpf($event)">
+        @if (form.controls.cpf.hasError('required')) {
+          <mat-error>Informe o CPF</mat-error>
+        } @else if (form.controls.cpf.hasError('cpf')) {
+          <mat-error>CPF inválido</mat-error>
+        } @else if (form.controls.cpf.hasError('cpfDuplicado')) {
+          <mat-error>CPF já cadastrado</mat-error>
+        }
+      </mat-form-field>
+
+      <div class="linha">
+        <mat-form-field appearance="outline">
+          <mat-label>Telefone</mat-label>
+          <input matInput type="tel" formControlName="telefone"
+                 placeholder="(71) 99999-9999" (input)="mascaraTelefone($event)">
+          @if (form.controls.telefone.hasError('required')) {
+            <mat-error>Informe o telefone</mat-error>
+          } @else if (form.controls.telefone.hasError('pattern')) {
+            <mat-error>Telefone inválido</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>E-mail (opcional)</mat-label>
+          <input matInput type="email" formControlName="email" inputmode="email">
+          <mat-error>E-mail inválido</mat-error>
+        </mat-form-field>
+      </div>
+    </mat-card>
+
+    <div class="rodape">
+      <a mat-button routerLink="/passageiros">Cancelar</a>
+      <button mat-flat-button type="submit">
+        {{ editando ? 'Salvar alterações' : 'Cadastrar' }}
+      </button>
+    </div>
+  </form>
+}

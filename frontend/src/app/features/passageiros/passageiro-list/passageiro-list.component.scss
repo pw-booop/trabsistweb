@@ -1,0 +1,27 @@
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.busca { width: 100%; max-width: 420px; }
+
+.contagem {
+  margin: 0 0 var(--space-3);
+  font-size: 14px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.tabela {
+  overflow-x: auto;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: var(--radius-md);
+}
+table { width: 100%; min-width: 680px; }
+
+.vazio {
+  text-align: center;
+  padding: var(--space-4);
+  color: var(--mat-sys-on-surface-variant);
+}
